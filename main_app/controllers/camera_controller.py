@@ -19,7 +19,6 @@ class CameraController(object):
     def create_queue(self):
         self.capture_queue = Queue()
         self.process_queue = Queue()
-        self.stream_queue = Queue()
 
     def create_thread(self):
         self.thread_capture = ThreadCapture(
@@ -27,7 +26,7 @@ class CameraController(object):
         self.thread_process = ThreadProcess(
             self.capture_queue, self.process_queue)
         self.thread_stream = ThreadStream(
-            self.stream_queue, self.stream_url, self.camera_id)
+            self.process_queue, self.stream_url, self.camera_id)
 
         self.list_thread = [self.thread_capture,
                             self.thread_process, self.thread_stream]
