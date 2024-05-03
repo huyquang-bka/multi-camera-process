@@ -1,1 +1,1 @@
-url: "rtsp://192.168.1.198:8554/camera"
+url: "rtsp://ip:port/camera"
