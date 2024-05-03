@@ -15,7 +15,7 @@ class ThreadStream(threading.Thread):
         self.stream_args = (
             "ffmpeg -r 15 -re -stream_loop -1 -f rawvideo -vcodec rawvideo -pix_fmt "
             f"rgb24 -s {stream_size[0]}x{stream_size[1]} -i pipe:0 -pix_fmt yuv420p -c:v libx264 -preset ultrafast -b:v 8196k  "
-            f"-f rtsp {stream_url}/{camera_id} -loglevel quiet").split()
+            f"-f rtsp {stream_url}/{camera_id} ").split()
         self.pipe = subprocess.Popen(self.stream_args, stdin=subprocess.PIPE)
         print(f"Stream at: {stream_url}/{camera_id}")
 
@@ -28,7 +28,7 @@ class ThreadStream(threading.Thread):
                 continue
             frame, bboxes = self.stream_queue.get()
             for bbox in bboxes:
-                x1, y1, x2, y2 = bbox
+                x1, y1, x2, y2 = list(map(int, bbox))
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
             if frame.shape[:2] != self.stream_size[::-1]:
                 frame = cv2.resize(frame, tuple(self.stream_size))
